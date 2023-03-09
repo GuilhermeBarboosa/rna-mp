@@ -12,6 +12,8 @@ matplotlib.use('TkAgg')
 
 
 sg.theme('Default')
+
+ciclo = 0;
 def aproximacao_grafico(a, b, c, d, e):
     entradas = 1
     num_neuronios = int(a)
@@ -144,6 +146,7 @@ def aproximacao_grafico(a, b, c, d, e):
         update_graph(x, t1, t2)
         update_error(listaciclo, listaerro)
 
+    print("Quantidade de ciclo total: " + str(ciclo))
 
 def update_graph(x, t1, t2):
     axes = fig.axes
