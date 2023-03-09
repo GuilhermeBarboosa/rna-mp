@@ -11,6 +11,7 @@ import matplotlib
 matplotlib.use('TkAgg')
 
 
+sg.theme('Default')
 def aproximacao_grafico(a, b, c, d, e):
     entradas = 1
     num_neuronios = int(a)
@@ -177,20 +178,23 @@ col2 = [
     [sg.Canvas(size=(200, 150), key='-CANVAS-')],
 ]
 
+
 layout = [
     [sg.Column(col1), sg.Column(col2)]
 ]
 
-window = sg.Window('Aproximação de Função', layout, background_color='#000000', finalize=True)
+window = sg.Window('Aproximação de Função', layout, finalize=True)
 
 fig = Figure(figsize=(4, 3))
 fig.add_subplot(111).plot([], [])
+fig.set_facecolor("#f0f0f0")
 figure_canvas_agg = FigureCanvasTkAgg(fig, window['-CANVAS-'].tk_canvas)
 figure_canvas_agg.draw()
 figure_canvas_agg.get_tk_widget().pack()
 
 fig2 = Figure(figsize=(4, 3))
 fig2.add_subplot(111).plot([], [])
+fig2.set_facecolor("#f0f0f0")
 figure_canvas_agg2 = FigureCanvasTkAgg(fig2, window['-CANVAS-'].tk_canvas)
 figure_canvas_agg2.draw()
 figure_canvas_agg2.get_tk_widget().pack()
