@@ -10,10 +10,9 @@ import matplotlib
 
 matplotlib.use('TkAgg')
 
-
 sg.theme('Default')
 
-ciclo = 0;
+
 def aproximacao_grafico(a, b, c, d, e):
     entradas = 1
     num_neuronios = int(a)
@@ -146,7 +145,15 @@ def aproximacao_grafico(a, b, c, d, e):
         update_graph(x, t1, t2)
         update_error(listaciclo, listaerro)
 
-    print("Quantidade de ciclo total: " + str(ciclo))
+    return ciclo, errototal
+
+
+def update_window(ciclo, erro):
+    window['-CICLOFINAL-'].update(visible=True)
+    window['-ERROFINAL-'].update(visible=True)
+    window['-CICLOFINAL-'].update(ciclo)
+    window['-ERROFINAL-'].update(erro)
+
 
 def update_graph(x, t1, t2):
     axes = fig.axes
@@ -174,16 +181,30 @@ col1 = [
     [sg.Text('Valor máximo do gráfico: ', font=('normal', 16), size=(30, 1)), sg.InputText()],
     [sg.Text('Número de pontos do gráfico: ', font=('normal', 16), size=(30, 1)), sg.InputText()],
     [sg.ReadButton('Treinar')],
-
 ]
 
 col2 = [
-    [sg.Canvas(size=(200, 150), key='-CANVAS-')],
+    [sg.Text('Gráfico da Função e do Teste', font=('bold', 16), justification='center')],
+    [sg.Text('Função Verdadeira em VERMELHO', font=('normal', 10), background_color="red", text_color=('white'))],
+    [sg.Text('Aproximação em Azul', font=('normal', 10), background_color="blue", text_color=('white'))],
+    [sg.Canvas(size=(200, 150), key='-CANVAS1-')],
 ]
 
+col3 = [
+    [sg.Text('Gráfico do erro total', font=('bold', 16), justification='center')],
+    [sg.Text('Erro Quadrático Final: ', font=('bold', 12)), sg.Text(key='-ERROFINAL-', font=('bold', 12))],
+    [sg.Text('', font=('normal', 8))],
+    [sg.Canvas(size=(200, 150), key='-CANVAS2-')],
+]
+
+col4 = [
+    [sg.Text('Nº Ciclos: ', font=('bold', 12)), sg.Text(key='-CICLOFINAL-', font=('bold', 12))],
+]
 
 layout = [
-    [sg.Column(col1), sg.Column(col2)]
+    [sg.Column(col1)],
+    [sg.Column(col2), sg.Column(col3)],
+    [sg.Column(col4)]
 ]
 
 window = sg.Window('Aproximação de Função', layout, finalize=True)
@@ -191,20 +212,21 @@ window = sg.Window('Aproximação de Função', layout, finalize=True)
 fig = Figure(figsize=(4, 3))
 fig.add_subplot(111).plot([], [])
 fig.set_facecolor("#f0f0f0")
-figure_canvas_agg = FigureCanvasTkAgg(fig, window['-CANVAS-'].tk_canvas)
+figure_canvas_agg = FigureCanvasTkAgg(fig, window['-CANVAS1-'].tk_canvas)
 figure_canvas_agg.draw()
 figure_canvas_agg.get_tk_widget().pack()
 
 fig2 = Figure(figsize=(4, 3))
 fig2.add_subplot(111).plot([], [])
 fig2.set_facecolor("#f0f0f0")
-figure_canvas_agg2 = FigureCanvasTkAgg(fig2, window['-CANVAS-'].tk_canvas)
+figure_canvas_agg2 = FigureCanvasTkAgg(fig2, window['-CANVAS2-'].tk_canvas)
 figure_canvas_agg2.draw()
 figure_canvas_agg2.get_tk_widget().pack()
 
 while True:
     event, values = window.read()
-    if event == 'Cancel':
+    if event == 'Cancel' or event == sg.WIN_CLOSED:
         break
     if event == 'Treinar':
-        aproximacao_grafico(values[0], values[1], values[2], values[3], values[4])
+        x = aproximacao_grafico(values[0], values[1], values[2], values[3], values[4])
+        update_window(x[0], x[1])
